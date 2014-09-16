@@ -33,18 +33,52 @@ class VideoSlice (EventMixin):
         # Adjacency map.  [sw1][sw2] -> port from sw1 to sw2
         self.adjacency = defaultdict(lambda:defaultdict(lambda:None))
         
-        '''
-        The structure of self.portmap is a four-tuple key and a string value.
-        The type is:
-        (dpid string, src MAC addr, dst MAC addr, port (int)) -> dpid of next switch
-        '''
+#       '''
+#        The structure of self.portmap is a four-tuple key and a string value.
+#        The type is:
+#        (dpid string, src MAC addr, dst MAC addr, port (int)) -> dpid of next switch
+#        '''
 
         self.portmap = { 
-                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),
-                         EthAddr('00:00:00:00:00:03'), 80): '00-00-00-00-00-03',
-                        
-                        """ Add your mapping logic here"""
-                        
+			# Video slice
+			# h1 to h3
+                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:03'), 80): '00-00-00-00-00-03',
+                        # h1 to h4
+			#Add your mapping logic here
+			('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:04'), 80): '00-00-00-00-00-03',
+			# h2 to h3
+			('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:03'), 80): '00-00-00-00-00-03',
+			# h2 to h4
+			('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:04'), 80): '00-00-00-00-00-03',
+
+			# h3 to h1
+                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:01'), 80): '00-00-00-00-00-03',
+                        # h3 to h2
+			('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), 80): '00-00-00-00-00-03',
+			# h3 to h1
+			('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:01'), 80): '00-00-00-00-00-03',
+			# h3 to h2
+			('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), 80): '00-00-00-00-00-03',
+
+			# non video slice 
+			# h1 to h3
+                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:03'), None): '00-00-00-00-00-02',
+                        # h1 to h4
+			('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:04'), None): '00-00-00-00-00-02',                        
+			# h2 to h3
+			('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:03'), None): '00-00-00-00-00-02',
+			# h2 to h4
+			('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:04'), None): '00-00-00-00-00-02',
+
+			# h3 to h1
+                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:01'), None): '00-00-00-00-00-02',
+                        # h3 to h2
+			('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), None): '00-00-00-00-00-02',
+			# h3 to h1
+			('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:01'), None): '00-00-00-00-00-02',
+			# h3 to h2
+			('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), None): '00-00-00-00-00-02'
+
                         }
 
     def _handle_LinkEvent (self, event):
@@ -61,9 +95,7 @@ class VideoSlice (EventMixin):
 
 
     def _handle_PacketIn (self, event):
-        """
-        Handle packet in messages from the switch to implement above algorithm.
-        """
+#        """        Handle packet in messages from the switch to implement above algorithm.        """
         packet = event.parsed
         tcpp = event.parsed.find('tcp')
 
@@ -88,10 +120,9 @@ class VideoSlice (EventMixin):
                           packet.dst, dpid_to_str(event.dpid), event.port)
 
                 try:
-                    """ Add your logic here""""
-                    
-
-                except AttributeError:
+#ahora
+		    log.debug("hola caracola")
+		except AttributeError:
                     log.debug("packet type has no transport ports, flooding")
 
                     # flood and install the flow table entry for the flood
@@ -99,7 +130,7 @@ class VideoSlice (EventMixin):
 
         # flood, but don't install the rule
         def flood (message = None):
-            """ Floods the packet """
+            #""" Floods the packet """
             msg = of.ofp_packet_out()
             msg.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
             msg.data = event.ofp
@@ -119,7 +150,5 @@ def launch():
     pox.openflow.discovery.launch()
     pox.openflow.spanning_tree.launch()
 
-    '''
-    Starting the Video Slicing module
-    '''
+#    '''    Starting the Video Slicing module    '''
     core.registerNew(VideoSlice)
