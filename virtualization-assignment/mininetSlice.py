@@ -34,7 +34,8 @@ class FVTopo(Topo):
         hconfig = {'inNamespace':True}
         http_link_config = {'bw': 1}
         video_link_config = {'bw': 10}
-        host_link_config = {}
+	# Therefore, maximum badnwith speed should be 10mbps
+        host_link_config = {'bw':10}
 
         # Create switch nodes
         for i in range(4):
