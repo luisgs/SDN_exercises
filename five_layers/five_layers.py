@@ -128,15 +128,26 @@ class VideoSlice (EventMixin):
 #if tcp_port is not 80:
 #    tcp_port = 0	# tcp_port should be used to create the key
                     k = (this_dpid, packet.src, packet.dst, packet.find('tcp').dstport)
-                    if not self.portmap.get(k):
+
+
+
+                    if not self.portmap.get(k):     #   We could not find it in our portmap list
                         k = (this_dpid, packet.src, packet.dst, packet.find('tcp').srcport)
                         if not self.portmap.get(k):
                             raise AttributeError
-
-                    ndpid = self.portmap[k]
-                    log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
-                    install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
-
+###########################
+                    if packet.srcport == 80:
+                        log.debug("Packet found is TCP and works in port 80")
+                        # We have found that this specifc packet is contained in our portmap
+                        ndpid = self.portmap[k]
+                        log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
+                        install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
+                    else:
+                        # We have found that this specifc packet is contained in our portmap
+                        ndpid = self.portmap[k]
+                        log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
+                        install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
+##########################
 		except AttributeError:
                     log.debug("packet type has no transport ports, flooding")
 
