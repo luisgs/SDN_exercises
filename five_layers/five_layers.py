@@ -14,7 +14,7 @@ import pox.openflow.libopenflow_01 as of
 import pox.openflow.discovery
 import pox.openflow.spanning_tree
 # I need this packet in order to study them.
-import pox.lib.packet as pkt
+#import pox.lib.packet as pkt
 
 from pox.lib.revent import *
 from pox.lib.util import dpid_to_str
@@ -104,8 +104,6 @@ class VideoSlice (EventMixin):
 #        """        Handle packet in messages from the switch to implement above algorithm.        """
         packet = event.parsed
         tcpp = event.parsed.find('tcp')
-        if packet.type == IP_TYPE:
-            log.debug("We have foudn a packet with hola message inside===========================")
 
         def install_fwdrule(event,packet,outport):
             msg = of.ofp_flow_mod()
@@ -142,6 +140,12 @@ class VideoSlice (EventMixin):
                     ndpid = self.portmap[k]
                     log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
                     install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
+                    if packet.type == packet.IP_TYPE:
+                        otro = packet.payload
+                        log.debug("Por aqui que estamos===========================")
+                        if otro.protocol == otro.TCP_PROTOCOL:
+                                if otro.find('hola'):
+                                    log.debug("We have foudn a packet with hola message inside===========================")
 #                        else:
 #                            log.debug("I have found nothing but pain_-___________________________________________")
 #                    else:
