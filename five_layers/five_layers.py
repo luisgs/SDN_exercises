@@ -13,6 +13,8 @@ from collections import defaultdict
 import pox.openflow.libopenflow_01 as of
 import pox.openflow.discovery
 import pox.openflow.spanning_tree
+# I need this packet in order to study them.
+import pox.lib.packet as pkt
 
 from pox.lib.revent import *
 from pox.lib.util import dpid_to_str
@@ -84,6 +86,7 @@ class VideoSlice (EventMixin):
                         ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), 22): '00-00-00-00-00-01'
                        }
 
+
     def _handle_LinkEvent (self, event):
         l = event.link
         sw1 = dpid_to_str(l.dpid1)
@@ -101,6 +104,8 @@ class VideoSlice (EventMixin):
 #        """        Handle packet in messages from the switch to implement above algorithm.        """
         packet = event.parsed
         tcpp = event.parsed.find('tcp')
+        if packet.type == IP_TYPE:
+            log.debug("We have foudn a packet with hola message inside===========================")
 
         def install_fwdrule(event,packet,outport):
             msg = of.ofp_flow_mod()
@@ -129,24 +134,21 @@ class VideoSlice (EventMixin):
 #    tcp_port = 0	# tcp_port should be used to create the key
                     k = (this_dpid, packet.src, packet.dst, packet.find('tcp').dstport)
 
-
-
                     if not self.portmap.get(k):     #   We could not find it in our portmap list
                         k = (this_dpid, packet.src, packet.dst, packet.find('tcp').srcport)
                         if not self.portmap.get(k):
                             raise AttributeError
 ###########################
-                    if packet.srcport == 80:
-                        log.debug("Packet found is TCP and works in port 80")
-                        # We have found that this specifc packet is contained in our portmap
-                        ndpid = self.portmap[k]
-                        log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
-                        install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
-                    else:
-                        # We have found that this specifc packet is contained in our portmap
-                        ndpid = self.portmap[k]
-                        log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
-                        install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
+                    ndpid = self.portmap[k]
+                    log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
+                    install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
+#                        else:
+#                            log.debug("I have found nothing but pain_-___________________________________________")
+#                    else:
+ #                       # We have found that this specifc packet is contained in our portmap
+  #                      ndpid = self.portmap[k]
+   #                     log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
+    #                    install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
 ##########################
 		except AttributeError:
                     log.debug("packet type has no transport ports, flooding")
