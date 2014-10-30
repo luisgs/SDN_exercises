@@ -123,10 +123,6 @@ class VideoSlice (EventMixin):
                           packet.dst, dpid_to_str(event.dpid), event.port)
 
                 try:
-#ahora
-#  """ Add your logic here""""
-#if tcp_port is not 80:
-#    tcp_port = 0	# tcp_port should be used to create the key
                     k = (this_dpid, packet.src, packet.dst, packet.find('tcp').dstport)
                     if not self.portmap.get(k):
                         k = (this_dpid, packet.src, packet.dst, packet.find('tcp').srcport)

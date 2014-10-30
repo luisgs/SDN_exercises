@@ -103,12 +103,6 @@ class VideoSlice (EventMixin):
             msg.match = of.ofp_match.from_packet(packet, event.port)
             # ofp_action_output is only for issue the output port
             msg.actions.append(of.ofp_action_output(port = outport))
-            # I have a port that is a integer anot another foggy value :)
-            # it is not OFPP_flood
-            if (isinstance(outport, int) and (outport != 65531)):
-                log.debug("I am into this rule!!!!!!!!!!!!!!!!!!!%d",outport)
-                msg.actions.append(of.ofp_action_vlan_vid(vlan_vid = 123))
-                msg.actions.append(of.ofp_action_vlan_pcp(vlan_pcp = 123))
             msg.data = event.ofp
             msg.in_port = event.port
             event.connection.send(msg)
@@ -124,10 +118,7 @@ class VideoSlice (EventMixin):
                           packet.dst, dpid_to_str(event.dpid), event.port)
 
                 try:
-#ahora
-#  """ Add your logic here""""
-#if tcp_port is not 80:
-#    tcp_port = 0	# tcp_port should be used to create the key
+                    #  """ Add your logic here""""
                     k = (this_dpid, packet.src, packet.dst, packet.find('tcp').dstport)
 
                     if not self.portmap.get(k):     #   We could not find it in our portmap list
@@ -138,21 +129,6 @@ class VideoSlice (EventMixin):
                     ndpid = self.portmap[k]
                     log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
                     install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
-#-----------
-#                    if packet.type == packet.IP_TYPE:
-#                        otro = packet.payload
-#                        log.debug("Por aqui que estamos===========================")
-#                        if otro.protocol == otro.TCP_PROTOCOL:
-#                                if otro.find('hola'):
-#                                    log.debug("We have foudn a packet with hola message inside===========================")
-#-----------
-#                        else:
-#                            log.debug("I have found nothing but pain_-___________________________________________")
-#                    else:
- #                       # We have found that this specifc packet is contained in our portmap
-  #                      ndpid = self.portmap[k]
-   #                     log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
-    #                    install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
 ##########################
 		except AttributeError:
                     log.debug("packet type has no transport ports, flooding")
