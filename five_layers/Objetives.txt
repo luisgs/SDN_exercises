@@ -1,0 +1,19 @@
+Objetives:
+
+This application should be able to perform the points below:
+    + Layer 2
+        - MAC authentication
+            If the host has the MAC listed in our matrix, it can use internet communicate.
+        Optional.
+        - VLAN assignation
+            All the host that have been granted before will get into the same VLAN ID.
+    + Layer 3
+        - ACLs
+            I will confirm that source and destination IP address can comunicate to each other.
+    + Layer 4
+        - Redirect traffic depending on the TCP's port used
+            As it is written in the exervise traffic will be redirect depending on the ports used. TCP=80 will go trough the higher bandwidth link.
+    + Layer 5
+        - DPI - Deep packet inspection.
+            Basically, I will try to read TCP packets' payload and look for a specific word.
+
