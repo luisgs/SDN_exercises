@@ -1,12 +1,8 @@
 #!/usr/bin/python
 
 """
-Coursera:
 - Software Defined Networking (SDN) course
 -- Network Virtualization: Network Topology
-
-Professor: Nick Feamster
-Teaching Assistant: Arpit Gupta
 """
 
 import inspect
@@ -25,7 +21,6 @@ from mininet.node import RemoteController
 net = None
 
 class FVTopo(Topo):
-    # credit: https://github.com/onstutorial/onstutorial/blob/master/flowvisor_scripts/flowvisor_topo.py
     def __init__(self):
         # Initialize topology
         Topo.__init__(self)
@@ -44,7 +39,7 @@ class FVTopo(Topo):
 
         # Create host nodes
         for i in range(4):
-            self.addHost('h%d' % (i+1), **hconfig)
+            host=self.addHost('h%d' % (i+1), **hconfig)
 
         # Add switch links
         # Specified to the port numbers to avoid any port number consistency issue

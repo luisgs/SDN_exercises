@@ -25,13 +25,24 @@ class VideoSlice (EventMixin):
 
         # Adjacency map.  [sw1][sw2] -> port from sw1 to sw2
         self.adjacency = defaultdict(lambda:defaultdict(lambda:None))
+
+#       '''     Layer 2
+#       BlackList
+#       Structure is:   dpid string
+#       Devices with the MAC address lsits in here wont get connection
+#       '''
+        self.blacklist = {EthAddr('00:00:00:00:00:0b')}
+
+#       '''     Layer 3
+#       WhiteList
+#       Devices with the IP address mention in here will get connectoin.
+#       '''
         
 #       '''
 #        The structure of self.portmap is a four-tuple key and a string value.
 #        The type is:
 #        (dpid string, src MAC addr, dst MAC addr, port (int)) -> dpid of next switch
 #        '''
-
         self.portmap = {('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:03'), 80): '00-00-00-00-00-03',
                         #  Add your mapping logic here
                         # VIDEO
@@ -113,6 +124,9 @@ class VideoSlice (EventMixin):
             if packet.dst.is_multicast:
                 flood()
                 return
+            elif packet.src in self.blacklist:  # or self.blacklist(packet.dst):
+                log.debug("Has visto un paquete con destino nuestro ENEMIGO!!!!!!!!!!!")
+                return
             else:
                 log.debug("Got unicast packet for %s at %s (input port %d):",
                           packet.dst, dpid_to_str(event.dpid), event.port)
@@ -130,7 +144,7 @@ class VideoSlice (EventMixin):
                     log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
                     install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
 ##########################
-		except AttributeError:
+                except AttributeError:
                     log.debug("packet type has no transport ports, flooding")
                     # flood and install the flow table entry for the flood
                     install_fwdrule(event,packet,of.OFPP_FLOOD)

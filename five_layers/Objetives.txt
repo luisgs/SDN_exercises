@@ -4,6 +4,8 @@ This application should be able to perform the points below:
     + Layer 2
         - MAC authentication
             If the host has the MAC listed in our matrix, it can use internet communicate.
+
+            I have added a host with a specific MAC address that it will not get access. This MAC address is listed in my black list.
         Optional.
         - VLAN assignation
             All the host that have been granted before will get into the same VLAN ID.
