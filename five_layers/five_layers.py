@@ -37,18 +37,10 @@ class VideoSlice (EventMixin):
 #       WhiteList
 #       Devices with the IP address mention in here will get connection.
 #       '''
-        self.ipmap = {  IPAddr('10.0.0.1'): '10.0.0.2',
-                        IPAddr('10.0.0.1'): '10.0.0.3',
-                        IPAddr('10.0.0.1'): '10.0.0.4',
-                        IPAddr('10.0.0.2'): '10.0.0.1',
-                        IPAddr('10.0.0.2'): '10.0.0.3',
-                        IPAddr('10.0.0.2'): '10.0.0.4',
-                        IPAddr('10.0.0.3'): '10.0.0.1',
-                        IPAddr('10.0.0.3'): '10.0.0.2',
-                        IPAddr('10.0.0.3'): '10.0.0.4',
-                        IPAddr('10.0.0.4'): '10.0.0.1',
-                        IPAddr('10.0.0.4'): '10.0.0.2',
-                        IPAddr('10.0.0.4'): '10.0.0.3'}
+        self.ipmap = {  IPAddr('10.0.0.1'): ['10.0.0.2','10.0.0.3','10.0.0.4'],
+                        IPAddr('10.0.0.2'): ['10.0.0.1','10.0.0.3','10.0.0.4'],
+                        IPAddr('10.0.0.3'): ['10.0.0.1','10.0.0.2','10.0.0.4'],
+                        IPAddr('10.0.0.4'): ['10.0.0.1','10.0.0.2','10.0.0.3']}
 
 #       '''
 #        The structure of self.portmap is a four-tuple key and a string value.
@@ -156,11 +148,14 @@ class VideoSlice (EventMixin):
                     #   Layer 3 - Second part of my code
                     #   ""
                     ipv4_packet = event.parsed.find('ipv4')
-                    if not self.ipmap.get(ipv4_packet.srcip):
-                        log.debug("you have not been able to cath the packet! %s" % str(ipv4_packet.srcip))
+                    if not self.ipmap.get(ipv4_packet.srcip):   # IP source is not in our list
+                        log.debug("This packet will be blocked. source IP isnot allowed to work! %s" % str(ipv4_packet.srcip))
                         return
-                    else:
-                        listElements=self.ipmap.get(ipv4_packet.srcip)
+                    elif not str(ipv4_packet.dstip) in self.ipmap[ipv4_packet.srcip]:   # combination IP source-destination is not mentioned.
+                        log.debug("!!!!!!!!!!%s IP DESTINO" % (str(ipv4_packet.dstip)))
+                        return
+                    else:   # IP source is allowed and combination between host is allowed as well.
+                        log.debug("ELSE !!!!!!!!!!%s IP DESTINO" % (str(ipv4_packet.dstip)))
                         log.debug("I have found an elemenet in my WHITELIST!! %s" % str(ipv4_packet.srcip))
                     #   ""
                     #   Layer 3 - End of the second part of my code
