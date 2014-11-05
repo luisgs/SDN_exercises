@@ -10,6 +10,10 @@ import pox.openflow.spanning_tree
 from pox.lib.revent import *
 from pox.lib.util import dpid_to_str
 from pox.lib.util import dpidToStr
+#I addede them
+from pox.lib.packet.ipv4 import ipv4
+from pox.lib.revent import EventHalt, EventContinue
+# end
 from pox.lib.addresses import IPAddr, EthAddr
 from collections import namedtuple
 import os
@@ -17,7 +21,7 @@ import os
 log = core.getLogger()
 
 
-class VideoSlice (EventMixin):
+class FiveLayer (EventMixin):
 
     def __init__(self):
         self.listenTo(core.openflow)
@@ -133,8 +137,8 @@ class VideoSlice (EventMixin):
                 return
             elif packet.src in self.blacklist:  # or self.blacklist(packet.dst):
                 # We have seen a packet in our MAC backlist that must be droped.
-                log.debug("Has visto un paquete con destino nuestro ENEMIGO!!!!!!!!!!! %s" % this_dpid)
-                #drop()
+                log.debug("Malicious HOST is getting access. MAC address blocked: %s" % str(packet.src))
+                #  https://github.com/nemethf/sigcomm2013/blob/master/our_controller/predefined_routing.py
                 return
             else:
                 log.debug("Got unicast packet for %s at %s (input port %d):",
@@ -191,13 +195,6 @@ class VideoSlice (EventMixin):
             msg.in_port = event.port
             event.connection.send(msg)
 
-        # I drop this packet
-        def drop (message = None):
-            #If no forward actions are present, the packet is dropped.
-            msg = of.ofp_port_mod()
-            msg.port_no = connection.features.ports[0].port_no
-            msg.hw_addr = connection.features.ports[0].hw_addr
-            msg.config = of.OFPPC_PORT_DOWN
 
         forward()
 
@@ -213,4 +210,4 @@ def launch():
     pox.openflow.spanning_tree.launch()
 
 #    '''    Starting the Video Slicing module    '''
-    core.registerNew(VideoSlice)
+    core.registerNew(FiveLayer)
