@@ -35,9 +35,21 @@ class VideoSlice (EventMixin):
 
 #       '''     Layer 3
 #       WhiteList
-#       Devices with the IP address mention in here will get connectoin.
+#       Devices with the IP address mention in here will get connection.
 #       '''
-        
+        self.ipmap = {  IPAddr('10.0.0.1'): '10.0.0.2',
+                        IPAddr('10.0.0.1'): '10.0.0.3',
+                        IPAddr('10.0.0.1'): '10.0.0.4',
+                        IPAddr('10.0.0.2'): '10.0.0.1',
+                        IPAddr('10.0.0.2'): '10.0.0.3',
+                        IPAddr('10.0.0.2'): '10.0.0.4',
+                        IPAddr('10.0.0.3'): '10.0.0.1',
+                        IPAddr('10.0.0.3'): '10.0.0.2',
+                        IPAddr('10.0.0.3'): '10.0.0.4',
+                        IPAddr('10.0.0.4'): '10.0.0.1',
+                        IPAddr('10.0.0.4'): '10.0.0.2',
+                        IPAddr('10.0.0.4'): '10.0.0.3'}
+
 #       '''
 #        The structure of self.portmap is a four-tuple key and a string value.
 #        The type is:
@@ -121,29 +133,55 @@ class VideoSlice (EventMixin):
         def forward (message = None):
             this_dpid = dpid_to_str(event.dpid)
 
+            #   ""
+            #   Layer 2 - Primer paso de mi proyecto
+            #   ""
             if packet.dst.is_multicast:
                 flood()
                 return
             elif packet.src in self.blacklist:  # or self.blacklist(packet.dst):
-                log.debug("Has visto un paquete con destino nuestro ENEMIGO!!!!!!!!!!!")
+                # We have seen a packet in our MAC backlist that must be droped.
+                log.debug("Has visto un paquete con destino nuestro ENEMIGO!!!!!!!!!!! %s" % this_dpid)
+                #drop()
                 return
             else:
                 log.debug("Got unicast packet for %s at %s (input port %d):",
                           packet.dst, dpid_to_str(event.dpid), event.port)
+            #   ""
+            #   Layer 2 - End of the first part of my project
+            #   ""
 
                 try:
-                    #  """ Add your logic here""""
+                    #   ""
+                    #   Layer 3 - Second part of my code
+                    #   ""
+                    ipv4_packet = event.parsed.find('ipv4')
+                    if not self.ipmap.get(ipv4_packet.srcip):
+                        log.debug("you have not been able to cath the packet! %s" % str(ipv4_packet.srcip))
+                        return
+                    else:
+                        listElements=self.ipmap.get(ipv4_packet.srcip)
+                        log.debug("I have found an elemenet in my WHITELIST!! %s" % str(ipv4_packet.srcip))
+                    #   ""
+                    #   Layer 3 - End of the second part of my code
+                    #   ""
+
+                    #   ""
+                    #   Layer 4 - Third part of my code
+                    #   ""
                     k = (this_dpid, packet.src, packet.dst, packet.find('tcp').dstport)
 
                     if not self.portmap.get(k):     #   We could not find it in our portmap list
                         k = (this_dpid, packet.src, packet.dst, packet.find('tcp').srcport)
                         if not self.portmap.get(k):
                             raise AttributeError
-###########################
                     ndpid = self.portmap[k]
                     log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
                     install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
-##########################
+                    #   ""
+                    #   Layer 4 - end Third part of my code
+                    #   ""
+                    
                 except AttributeError:
                     log.debug("packet type has no transport ports, flooding")
                     # flood and install the flow table entry for the flood
@@ -157,6 +195,14 @@ class VideoSlice (EventMixin):
             msg.data = event.ofp
             msg.in_port = event.port
             event.connection.send(msg)
+
+        # I drop this packet
+        def drop (message = None):
+            #If no forward actions are present, the packet is dropped.
+            msg = of.ofp_port_mod()
+            msg.port_no = connection.features.ports[0].port_no
+            msg.hw_addr = connection.features.ports[0].hw_addr
+            msg.config = of.OFPPC_PORT_DOWN
 
         forward()
 
