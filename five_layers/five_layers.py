@@ -13,6 +13,7 @@ from pox.lib.util import dpidToStr
 #I addede them
 from pox.lib.packet.ipv4 import ipv4
 from pox.lib.revent import EventHalt, EventContinue
+from pox.lib.packet.tcp import tcp
 # end
 from pox.lib.addresses import IPAddr, EthAddr
 from collections import namedtuple
@@ -40,11 +41,12 @@ class FiveLayer (EventMixin):
 #       '''     Layer 3
 #       WhiteList
 #       Devices with the IP address mention in here will get connection.
+#           key=IP source, result is the list of IPs that they can attack
 #       '''
         self.ipmap = {  IPAddr('10.0.0.1'): ['10.0.0.2','10.0.0.3','10.0.0.4'],
                         IPAddr('10.0.0.2'): ['10.0.0.1','10.0.0.3','10.0.0.4'],
                         IPAddr('10.0.0.3'): ['10.0.0.1','10.0.0.2','10.0.0.4'],
-                        IPAddr('10.0.0.4'): ['10.0.0.1','10.0.0.2','10.0.0.3']}
+                        IPAddr('10.0.0.4'): ['10.0.0.1','10.0.0.2']}
 
 #       '''
 #        The structure of self.portmap is a four-tuple key and a string value.
@@ -181,6 +183,18 @@ class FiveLayer (EventMixin):
                     #   Layer 4 - end Third part of my code
                     #   ""
                     
+
+
+                    #   ""
+                    #   layer 5
+                    #   ""
+                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.payload)))
+                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.msg)))
+                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.raw)))
+                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.payload)))
+                    #   ""
+                    #   layer 5 - End 
+                    #   ""
                 except AttributeError:
                     log.debug("packet type has no transport ports, flooding")
                     # flood and install the flow table entry for the flood
@@ -194,7 +208,6 @@ class FiveLayer (EventMixin):
             msg.data = event.ofp
             msg.in_port = event.port
             event.connection.send(msg)
-
 
         forward()
 
