@@ -15,7 +15,7 @@ This application should be able to perform the points below:
     + Layer 3   IPV4
         - ACLs
             it confirms that IP source is allowed to communicate and
-            it confirms that IP connection (source, destination) is allowed to communicate
+            it confirms that IP connection (source, destination) is allowed to communicate. ACL source can get the destination IP address.
             in case of it is not possible. drop packets.
     + Layer 4
         - Redirect traffic depending on the TCP's port used

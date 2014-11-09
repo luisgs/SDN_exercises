@@ -188,9 +188,9 @@ class FiveLayer (EventMixin):
                     #   ""
                     #   layer 5
                     #   ""
-                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.payload)))
-                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.msg)))
-                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.raw)))
+#                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.payload)))
+#                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.msg)))
+#                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.raw)))
                     log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.payload)))
                     #   ""
                     #   layer 5 - End 
