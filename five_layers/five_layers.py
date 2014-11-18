@@ -45,8 +45,9 @@ class FiveLayer (EventMixin):
 #       '''
         self.ipmap = {  IPAddr('10.0.0.1'): ['10.0.0.2','10.0.0.3','10.0.0.4'],
                         IPAddr('10.0.0.2'): ['10.0.0.1','10.0.0.3','10.0.0.4'],
-                        IPAddr('10.0.0.3'): ['10.0.0.1','10.0.0.2','10.0.0.4'],
+                        IPAddr('10.0.0.3'): ['10.0.0.1','10.0.0.2'],
                         IPAddr('10.0.0.4'): ['10.0.0.1','10.0.0.2']}
+
 
 #       '''
 #        The structure of self.portmap is a four-tuple key and a string value.
@@ -75,27 +76,27 @@ class FiveLayer (EventMixin):
                         ('00-00-00-00-00-03', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:03'), 80): '00-00-00-00-00-04',
                         ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), 80): '00-00-00-00-00-03',
                         ('00-00-00-00-00-03', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), 80): '00-00-00-00-00-01',
-                        # 22 PORT
+                        # 0 PORT
                         # h1 -- h3
-                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:03'), 22): '00-00-00-00-00-02',
-                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:03'), 22): '00-00-00-00-00-04',
-                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:01'), 22): '00-00-00-00-00-02',
-                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:01'), 22): '00-00-00-00-00-01',
+                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:03'), 0): '00-00-00-00-00-02',
+                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:03'), 0): '00-00-00-00-00-04',
+                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:01'), 0): '00-00-00-00-00-02',
+                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:01'), 0): '00-00-00-00-00-01',
                         # h2 -- h4
-                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:04'), 22): '00-00-00-00-00-02',
-                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:04'), 22): '00-00-00-00-00-04',
-                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:04'),EthAddr('00:00:00:00:00:02'), 22): '00-00-00-00-00-02',
-                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:04'),EthAddr('00:00:00:00:00:02'), 22): '00-00-00-00-00-01',
+                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:04'), 0): '00-00-00-00-00-02',
+                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:04'), 0): '00-00-00-00-00-04',
+                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:04'),EthAddr('00:00:00:00:00:02'), 0): '00-00-00-00-00-02',
+                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:04'),EthAddr('00:00:00:00:00:02'), 0): '00-00-00-00-00-01',
                         # h1 -- h4
-                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:04'), 22): '00-00-00-00-00-02',
-                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:04'), 22): '00-00-00-00-00-04',
-                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:04'),EthAddr('00:00:00:00:00:01'), 22): '00-00-00-00-00-02',
-                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:04'),EthAddr('00:00:00:00:00:01'), 22): '00-00-00-00-00-01',
+                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:04'), 0): '00-00-00-00-00-02',
+                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:01'),EthAddr('00:00:00:00:00:04'), 0): '00-00-00-00-00-04',
+                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:04'),EthAddr('00:00:00:00:00:01'), 0): '00-00-00-00-00-02',
+                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:04'),EthAddr('00:00:00:00:00:01'), 0): '00-00-00-00-00-01',
                         # h2 -- h3
-                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:03'), 22): '00-00-00-00-00-02',
-                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:03'), 22): '00-00-00-00-00-04',
-                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), 22): '00-00-00-00-00-02',
-                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), 22): '00-00-00-00-00-01'
+                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:03'), 0): '00-00-00-00-00-02',
+                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:02'),EthAddr('00:00:00:00:00:03'), 0): '00-00-00-00-00-04',
+                        ('00-00-00-00-00-04', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), 0): '00-00-00-00-00-02',
+                        ('00-00-00-00-00-02', EthAddr('00:00:00:00:00:03'),EthAddr('00:00:00:00:00:02'), 0): '00-00-00-00-00-01'
                        }
 
 
@@ -139,7 +140,8 @@ class FiveLayer (EventMixin):
                 return
             elif packet.src in self.blacklist:  # or self.blacklist(packet.dst):
                 # We have seen a packet in our MAC backlist that must be droped.
-                log.debug("Malicious HOST is getting access. MAC address blocked: %s" % str(packet.src))
+                log.debug("L2: BLOCKED: Malicious HOST try to communicate (IN/OUT). MAC address has been blocked: %s" % str(packet.src))
+                log.debug("L2: BLOCKED: Its traffic will be dropped")
                 #  https://github.com/nemethf/sigcomm2013/blob/master/our_controller/predefined_routing.py
                 return
             else:
@@ -153,16 +155,29 @@ class FiveLayer (EventMixin):
                     #   ""
                     #   Layer 3 - Second part of my code
                     #   ""
+                    
+                    if event.parsed.find('icmp'):
+                        # ICMP packets or PING packets will be alowed to be transmitted.
+                        # if we do not anything, it will flood anyway, but we like to have everything tight
+                        log.debug("L3: ICMP: ICMP packet. They are always free to travel, packet will be flood")
+                        log.debug("L3: ICMP: Source IP: %s / Destination IP: %s" % (str(event.parsed.find('icmp').srcip), str(event.parsed.find('icmp').dstip)))
+                        # flood the packet
+                        install_fwdrule(event,packet,of.OFPP_FLOOD)
+                        #flood()
+                        return
+
+                    # if the flow is contained in my list above, it will be allowed 
                     ipv4_packet = event.parsed.find('ipv4')
                     if not self.ipmap.get(ipv4_packet.srcip):   # IP source is not in our list
-                        log.debug("This packet will be blocked. source IP isnot allowed to work! %s" % str(ipv4_packet.srcip))
+                        log.debug("L3: Packet blocked. Source IP address is not allowed: Source IP: %s" % str(ipv4_packet.srcip))
                         return
                     elif not str(ipv4_packet.dstip) in self.ipmap[ipv4_packet.srcip]:   # combination IP source-destination is not mentioned.
-                        log.debug("!!!!!!!!!!%s IP DESTINO" % (str(ipv4_packet.dstip)))
+                        log.debug("L3: BLOCKED: Packet blocked. Source IP address is OK but it cannot send traffic to the destination address:")
+                        log.debug("L3: BLOCKED: Source IP: %s / Destination IP: %s" % (str(ipv4_packet.srcip), str(ipv4_packet.dstip)))
                         return
                     else:   # IP source is allowed and combination between host is allowed as well.
-                        log.debug("ELSE !!!!!!!!!!%s IP DESTINO" % (str(ipv4_packet.dstip)))
-                        log.debug("I have found an elemenet in my WHITELIST!! %s" % str(ipv4_packet.srcip))
+                        log.debug("L3: OK: Packet is allowed to travel. Combination source/destination IP is allowed")
+                        log.debug("L3: OK: Source IP: %s / Destination IP: %s" % (str(ipv4_packet.srcip), str(ipv4_packet.dstip)))
                     #   ""
                     #   Layer 3 - End of the second part of my code
                     #   ""
@@ -177,8 +192,9 @@ class FiveLayer (EventMixin):
                         if not self.portmap.get(k):
                             raise AttributeError
                     ndpid = self.portmap[k]
-                    log.debug("install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
+                    log.debug("L5: INSTALLING RULE: install: %s output %d" % (str(k), self.adjacency[this_dpid][ndpid]))
                     install_fwdrule(event,packet,self.adjacency[this_dpid][ndpid])
+
                     #   ""
                     #   Layer 4 - end Third part of my code
                     #   ""
@@ -188,13 +204,23 @@ class FiveLayer (EventMixin):
                     #   ""
                     #   layer 5
                     #   ""
+                    wordforbidden = ["wikipedia", "facebook"]
 #                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.payload)))
 #                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.msg)))
 #                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.raw)))
-                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.payload)))
+                    log.debug("L5: OK: FIRST APPROACH")
+                    if ((this_dpid == ('00-00-00-00-00-03')) and (packet.find('tcp')) and (str(packet.next.next.payload))is not None):
+                        TCPpayload = str(packet.next.next.payload)
+                        log.debug("L5: OK: DENTRO del switch numero 3!!!")
+                        for i in range(len(wordforbidden)):
+                            if wordforbidden[i] in TCPpayload:
+                                log.debug("L5: ALARM: SWITCH %s" % this_dpid)
+                                log.debug("L5: ALARM: TCP PACKET's payload contains: %s" % wordforbidden[i])
+#                    log.debug("!!!!!!!!!!!!!!PACKET TCP %s" % (str(packet.next.next.payload)))
                     #   ""
                     #   layer 5 - End 
                     #   ""
+                    return
                 except AttributeError:
                     log.debug("packet type has no transport ports, flooding")
                     # flood and install the flow table entry for the flood

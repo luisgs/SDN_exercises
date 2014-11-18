@@ -9,18 +9,22 @@ This application should be able to perform the points below:
                 https://www.opennetworking.org/images/stories/downloads/sdn-resources/onf-specifications/openflow/openflow-spec-v1.0.0.pdf
             Therefore, 
             I have added a host with a specific MAC address that it will not get access. This MAC address is listed in my black list.
-        Optional.
-        - VLAN assignation
-            All the host that have been granted before will get into the same VLAN ID.
+
+            Test:   pingall
+                    it has to ping all the machines but h5 has to remain unreachable for all of them.
     + Layer 3   IPV4
         - ACLs
             it confirms that IP source is allowed to communicate and
             it confirms that IP connection (source, destination) is allowed to communicate. ACL source can get the destination IP address.
             in case of it is not possible. drop packets.
+            
+            Test:   IP traffic is dropped. Ostinato or iperf
     + Layer 4
         - Redirect traffic depending on the TCP's port used
             As it is written in the exercise, traffic will be redirect depending on the TCP ports used. TCP=80 will go trough the higher bandwidth link.
+            Test:   IPerf has to demostrate your thesis. TCP 80 high bandwidth, the rest only 1mb
     + Layer 5
         - DPI - Deep packet inspection.
             Basically, I will try to read TCP packets' payload and look for a specific word.
+            Test:   YOu need to be able to read wordforbiddens... Ostinato generate TCP 80 packet.
 
